@@ -1,6 +1,6 @@
 [package]
 name = "openmindsteed"
-version = "0.1.0"
+version = "0.1.1"
 description = "OpenMindSteed desktop shell"
 authors = ["OpenMindSteed contributors"]
 edition = "2021"

@@ -1,6 +1,6 @@
 {
   "name": "openmindsteed",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Open-source React/TypeScript rebuild of MindSteed, a desktop-first AI knowledge tree app with Obsidian sync.",
   "type": "module",
   "repository": {
