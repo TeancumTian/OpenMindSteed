@@ -3,5 +3,5 @@
   "identifier": "default",
   "description": "Default desktop permissions for OpenMindSteed",
   "windows": ["main"],
-  "permissions": ["dialog:default", "core:event:default"]
+  "permissions": ["dialog:default", "core:event:allow-listen", "core:event:allow-unlisten"]
 }

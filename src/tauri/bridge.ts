@@ -42,8 +42,16 @@ export async function listenTauriEvent<T>(
   handler: (payload: T) => void,
 ): Promise<() => void> {
   if (!isTauriRuntime()) return () => undefined;
-  const { listen } = await import("@tauri-apps/api/event");
-  return listen<T>(eventName, (event) => handler(event.payload));
+  try {
+    const { listen } = await import("@tauri-apps/api/event");
+    return await listen<T>(eventName, (event) => handler(event.payload));
+  } catch (error) {
+    console.warn(
+      `Tauri event listener unavailable for ${eventName}; continuing without streaming events.`,
+      error,
+    );
+    return () => undefined;
+  }
 }
 
 export const codexDeltaEvent = "codex-local://delta";
