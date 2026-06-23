@@ -1,3 +1,4 @@
+import { invoke as coreInvoke, isTauri } from "@tauri-apps/api/core";
 import type { GeneratedImage, MindSteedState, ObsidianSettings } from "../domain/types";
 import type { ObsidianPackage } from "../features/obsidian/export";
 
@@ -13,12 +14,19 @@ declare global {
   }
 }
 
+function globalInvoke(): TauriInvoke | null {
+  return typeof window === "undefined" ? null : (window.__TAURI__?.core?.invoke ?? null);
+}
+
 function invoke(): TauriInvoke | null {
-  return window.__TAURI__?.core?.invoke ?? null;
+  const tauriGlobalInvoke = globalInvoke();
+  if (tauriGlobalInvoke) return tauriGlobalInvoke;
+  if (!isTauri()) return null;
+  return (command, args) => coreInvoke(command, args);
 }
 
 export function isTauriRuntime(): boolean {
-  return invoke() !== null;
+  return isTauri() || globalInvoke() !== null;
 }
 
 export async function invokeTauri<T>(command: string, args?: Record<string, unknown>): Promise<T> {
