@@ -50,7 +50,7 @@ Pending:
 
 - Additional vendor-specific image adapters and provider-specific search refinements.
 - Codex Local hardening: richer failure-specific recovery and structured extraction refinements.
-- Apple signing/notarization secret setup and first public release validation.
+- Apple signing/notarization secret setup for trusted macOS distribution.
 
 ## Run
 

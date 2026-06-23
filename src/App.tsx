@@ -24,6 +24,7 @@ import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { createId, nowIso } from "./domain/ids";
 import {
   childrenOf,
+  descendantsOf,
   messagesFor,
   pathToNode,
   rootNodes,
@@ -319,6 +320,14 @@ export function App() {
     streamControllersRef.current.get(nodeId)?.abort();
   }
 
+  function deleteNodeWithConfirmation(nodeId: NodeId) {
+    const message = deleteNodeConfirmationMessage(state.nodes, nodeId);
+    if (!message) return;
+    if (window.confirm(message)) {
+      actions.deleteNode(nodeId, true);
+    }
+  }
+
   function expandSuggestion(suggestion: ConceptSuggestion) {
     if (!node) return;
     dispatch({ type: "mark-suggestion-expanded", suggestionId: suggestion.id });
@@ -401,7 +410,7 @@ export function App() {
         onSelect={(nodeId) => dispatch({ type: "select-node", nodeId })}
         onCreateRoot={actions.createRoot}
         onCreateChild={(parentId) => actions.createChild(parentId, "新分支", "manual")}
-        onDeleteNode={(nodeId) => actions.deleteNode(nodeId, true)}
+        onDeleteNode={deleteNodeWithConfirmation}
       />
 
       <section className="graph-pane" aria-label="知识图谱">
@@ -500,14 +509,19 @@ function TreePane(props: {
 
       <form className="new-root-form" onSubmit={submit}>
         <label htmlFor="new-root">新知识树</label>
-        <div>
-          <input
+        <div className="new-root-controls">
+          <textarea
             id="new-root"
             value={seedText}
             onChange={(event) => setSeedText(event.target.value)}
-            placeholder="输入主题或粘贴原始问题"
+            placeholder="输入主题、问题或粘贴一段原始材料"
           />
-          <button className="icon-button solid" type="submit" aria-label="创建知识树">
+          <button
+            className="icon-button solid"
+            type="submit"
+            aria-label="创建知识树"
+            disabled={!seedText.trim()}
+          >
             <Plus size={18} />
           </button>
         </div>
@@ -1438,6 +1452,18 @@ export function visibleGraphNodes(
     }
   }
   return nodes.filter((node) => visible.has(node.id));
+}
+
+export function deleteNodeConfirmationMessage(
+  nodes: KnowledgeNode[],
+  nodeId: NodeId,
+): string | null {
+  const target = nodes.find((node) => node.id === nodeId);
+  if (!target) return null;
+  const descendantCount = descendantsOf(nodes, target.id).length;
+  const scope =
+    descendantCount > 0 ? `“${target.title}”和 ${descendantCount} 个子节点` : `“${target.title}”`;
+  return `删除${scope}？这只会删除 OpenMindSteed 中的节点；下次同步到 Obsidian 时，对应的托管文件会移动到 _Deleted。`;
 }
 
 export function autoPromptForNode(node: KnowledgeNode) {

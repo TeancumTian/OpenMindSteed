@@ -145,11 +145,23 @@ textarea:disabled {
   text-transform: uppercase;
 }
 
-.new-root-form div,
 .input-with-icon {
   display: flex;
   gap: 8px;
   align-items: center;
+}
+
+.new-root-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 38px;
+  align-items: start;
+  gap: 8px;
+}
+
+.new-root-controls textarea {
+  min-height: 76px;
+  max-height: 136px;
+  resize: vertical;
 }
 
 input,

@@ -5,6 +5,7 @@ import {
   chatIntentForNodeTurn,
   codexStatusNoticeFromMetadata,
   codexThreadNoticeFromMetadata,
+  deleteNodeConfirmationMessage,
   formatCodexStatusDisplay,
   parseGeneratedImageMessage,
   searchKnowledgeNodes,
@@ -71,6 +72,33 @@ describe("visibleGraphNodes", () => {
       "a-child-2",
       "a-grandchild",
     ]);
+  });
+});
+
+describe("deleteNodeConfirmationMessage", () => {
+  const nodes = [
+    node({ id: "root-a", rootId: "root-a", title: "Root A", creationMethod: "root" }),
+    node({ id: "a-child-1", parentId: "root-a", rootId: "root-a", title: "A Child 1" }),
+    node({ id: "a-grandchild", parentId: "a-child-1", rootId: "root-a", title: "A Grandchild" }),
+  ];
+
+  it("mentions the descendant count for subtree deletion", () => {
+    const message = deleteNodeConfirmationMessage(nodes, "root-a");
+
+    expect(message).toContain("Root A");
+    expect(message).toContain("2 个子节点");
+    expect(message).toContain("_Deleted");
+  });
+
+  it("uses a leaf-node confirmation without descendant text", () => {
+    const message = deleteNodeConfirmationMessage(nodes, "a-grandchild");
+
+    expect(message).toContain("A Grandchild");
+    expect(message).not.toContain("个子节点");
+  });
+
+  it("returns null for an unknown node", () => {
+    expect(deleteNodeConfirmationMessage(nodes, "missing")).toBeNull();
   });
 });
 
