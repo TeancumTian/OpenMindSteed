@@ -22,14 +22,7 @@ jobs:
   macos:
     runs-on: macos-15
     env:
-      APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
-      APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
-      APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-      APPLE_ID: ${{ secrets.APPLE_ID }}
-      APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-      APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
-      APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+      HAS_APPLE_SIGNING_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE != '' && secrets.APPLE_CERTIFICATE_PASSWORD != '' && secrets.APPLE_SIGNING_IDENTITY != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -62,7 +55,16 @@ jobs:
           cargo test --manifest-path src-tauri/Cargo.toml
           cargo check --manifest-path src-tauri/Cargo.toml
 
-      - name: Build Tauri release bundle
+      - name: Build Tauri release bundle unsigned
+        if: ${{ env.HAS_APPLE_SIGNING_CERTIFICATE != 'true' }}
+        run: pnpm run tauri:build
+
+      - name: Build Tauri release bundle signed
+        if: ${{ env.HAS_APPLE_SIGNING_CERTIFICATE == 'true' }}
+        env:
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
         run: pnpm run tauri:build
 
       - name: Collect release assets

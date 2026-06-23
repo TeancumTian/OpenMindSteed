@@ -72,6 +72,8 @@ The workflow:
 5. Collects `.dmg`, `.tar.gz`, `.zip`, and zipped `.app` artifacts into `release-assets/`.
 6. Uploads artifacts; for tag builds, publishes them to the GitHub Release with `gh release create`.
 
+If Apple signing secrets are not configured, the workflow builds unsigned macOS artifacts. When `APPLE_CERTIFICATE`, `APPLE_CERTIFICATE_PASSWORD`, and `APPLE_SIGNING_IDENTITY` are all present, the signed build path is used.
+
 ## macOS Signing and Notarization
 
 Tauri's macOS signing flow requires an Apple Developer account and code-signing certificate. For distribution outside the Mac App Store, use a `Developer ID Application` certificate. Free Apple Developer accounts can sign for development testing but cannot notarize public downloads.
