@@ -4,9 +4,9 @@
   "version": "0.1.0",
   "identifier": "dev.openmindsteed.desktop",
   "build": {
-    "beforeDevCommand": "corepack pnpm run dev",
+    "beforeDevCommand": "npm run dev",
     "devUrl": "http://127.0.0.1:5173",
-    "beforeBuildCommand": "corepack pnpm run build",
+    "beforeBuildCommand": "npm run build",
     "frontendDist": "../dist"
   },
   "app": {
