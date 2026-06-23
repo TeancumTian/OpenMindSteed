@@ -37,8 +37,8 @@ jobs:
         with:
           node-version: "22.13.0"
 
-      - name: Enable pnpm
-        run: corepack enable
+      - name: Install pnpm
+        run: npm install -g pnpm@9.15.4
 
       - name: Install Rust stable
         run: rustup toolchain install stable --profile minimal
