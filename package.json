@@ -1,0 +1,64 @@
+{
+  "name": "openmindsteed",
+  "version": "0.1.0",
+  "description": "Open-source React/TypeScript rebuild of MindSteed, a desktop-first AI knowledge tree app with Obsidian sync.",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TeancumTian/OpenMindSteed.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TeancumTian/OpenMindSteed/issues"
+  },
+  "homepage": "https://github.com/TeancumTian/OpenMindSteed#readme",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "secrets:check": "node scripts/check-no-secrets.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "codex:protocol": "node scripts/generate-codex-protocol.mjs",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build"
+  },
+  "keywords": [
+    "knowledge-graph",
+    "obsidian",
+    "tauri",
+    "react",
+    "ai"
+  ],
+  "author": "Teancum Tian",
+  "license": "MIT",
+  "dependencies": {
+    "@tauri-apps/api": "^2.9.0",
+    "@tauri-apps/plugin-dialog": "^2.7.1",
+    "lucide-react": "^0.468.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@playwright/test": "^1.61.0",
+    "@tauri-apps/cli": "^2.9.0",
+    "@types/node": "^26.0.0",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.17.0",
+    "globals": "^15.14.0",
+    "jsdom": "^25.0.1",
+    "prettier": "^3.8.4",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.2",
+    "vite": "^6.0.5",
+    "vitest": "^2.1.8"
+  },
+  "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0"
+}

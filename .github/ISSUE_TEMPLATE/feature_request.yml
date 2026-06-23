@@ -1,0 +1,72 @@
+name: Feature request
+description: Propose a user-facing product improvement.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        OpenMindSteed is a desktop knowledge workspace. Feature requests are easiest to evaluate when they describe the learning workflow, graph behavior, and Obsidian outcome they improve.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or workflow
+      description: What user workflow is blocked, slow, or confusing?
+      placeholder: Describe the user, current workflow, and why the current behavior is not enough.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: What should OpenMindSteed do?
+      placeholder: Describe the desired interaction, data model change, provider behavior, or sync output.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Primary area
+      options:
+        - Workspace UI
+        - Graph or tree navigation
+        - Node learning flow
+        - BYOK provider
+        - Codex Local provider
+        - Obsidian sync
+        - Backup or restore
+        - Packaging or release
+        - Documentation
+    validations:
+      required: true
+  - type: textarea
+    id: obsidian
+    attributes:
+      label: Obsidian result
+      description: If this affects sync, describe the expected Markdown, asset, or manifest output.
+      placeholder: What should appear in the vault after sync?
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      placeholder: Existing workaround, different UI shape, different provider path, or related tools.
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: How would contributors know the feature is done?
+      placeholder: |
+        - User can ...
+        - Obsidian sync writes ...
+        - Tests cover ...
+    validations:
+      required: true
+  - type: checkboxes
+    id: alignment
+    attributes:
+      label: Project alignment
+      options:
+        - label: This request keeps BYOK Direct as a stable provider path or clearly marks experimental provider behavior.
+        - label: This request does not require OpenMindSteed to read Codex auth files or store Codex access tokens.
+        - label: This request preserves user-authored Obsidian content outside managed blocks, if sync is affected.

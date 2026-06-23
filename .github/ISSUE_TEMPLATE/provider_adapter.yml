@@ -1,0 +1,65 @@
+name: Provider adapter request
+description: Request or refine a BYOK provider search/image/chat adapter.
+title: "[Provider]: "
+labels:
+  - provider
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Provider work needs source-backed API details. Link official provider documentation and avoid sharing API keys or account-specific secrets.
+  - type: input
+    id: provider
+    attributes:
+      label: Provider
+      placeholder: Qwen/DashScope, Kimi/Moonshot, Z.AI, Doubao, DeepSeek, other
+    validations:
+      required: true
+  - type: input
+    id: model
+    attributes:
+      label: Model or endpoint
+      placeholder: Model id and API base URL
+    validations:
+      required: true
+  - type: dropdown
+    id: capability
+    attributes:
+      label: Requested capability
+      options:
+        - Chat completions
+        - Web search
+        - Image generation
+        - Image understanding
+        - Embeddings
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: docs
+    attributes:
+      label: Official documentation
+      description: Link the specific official API docs for the requested capability.
+      placeholder: https://...
+    validations:
+      required: true
+  - type: textarea
+    id: request_shape
+    attributes:
+      label: Request shape
+      description: Summarize provider-specific parameters, tool declarations, streaming limits, and auth header requirements.
+      placeholder: Include only public API shapes, not secrets.
+  - type: textarea
+    id: response_shape
+    attributes:
+      label: Response shape
+      description: Summarize provider-specific response fields OpenMindSteed should parse.
+      placeholder: Text deltas, tool calls, generated image URLs, citations, usage fields, error format.
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Credential check
+      options:
+        - label: I did not include API keys, access tokens, auth files, account IDs, or private prompts.
+          required: true

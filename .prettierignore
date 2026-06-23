@@ -1,0 +1,16 @@
+node_modules/
+dist/
+dist-ssr/
+coverage/
+.vite/
+playwright-report/
+test-results/
+src-tauri/target/
+src-tauri/gen/
+src-tauri/Cargo.lock
+docs/assets/
+docs/example-vault/
+*.timestamp-*.mjs
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal

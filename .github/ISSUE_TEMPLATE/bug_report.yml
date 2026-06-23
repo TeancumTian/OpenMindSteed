@@ -1,0 +1,109 @@
+name: Bug report
+description: Report a reproducible OpenMindSteed problem.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a problem. Please include enough detail for another contributor to reproduce it without access to your private notes, API keys, or Codex credentials.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What went wrong?
+      placeholder: Describe the visible problem and the feature area affected.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Workspace UI
+        - Graph or tree navigation
+        - BYOK provider
+        - Codex Local provider
+        - Obsidian sync
+        - Backup or restore
+        - Tauri desktop shell
+        - Build, CI, or release
+        - Documentation
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: List the smallest reliable reproduction steps.
+      placeholder: |
+        1. Start the app with ...
+        2. Select ...
+        3. Click ...
+        4. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      placeholder: What should have happened?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      placeholder: What happened instead? Include visible error text when useful.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: OpenMindSteed version or commit
+      placeholder: v0.1.0, commit SHA, or branch name
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: macOS 15.5, Windows 11, Ubuntu 24.04
+    validations:
+      required: true
+  - type: dropdown
+    id: runtime
+    attributes:
+      label: Runtime
+      options:
+        - Browser dev server
+        - Tauri desktop app
+        - Both browser and Tauri
+        - CI only
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: provider
+    attributes:
+      label: AI provider details
+      description: Required only for provider bugs. Do not paste API keys, access tokens, auth files, or full private prompts.
+      placeholder: Provider preset, model name, web search/image settings, Codex CLI version if using Codex Local.
+  - type: textarea
+    id: obsidian
+    attributes:
+      label: Obsidian sync details
+      description: Required only for sync bugs. Do not attach a private vault unless you have made a minimal redacted reproduction.
+      placeholder: Vault path shape, sync scope, managed block behavior, manifest state, generated-image assets.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+      description: Paste relevant redacted logs or attach screenshots. Remove API keys, Codex access tokens, and private notes.
+      render: shell
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Privacy and credential check
+      options:
+        - label: I removed API keys, Codex access tokens, auth files, private notes, and unrelated personal data from this report.
+          required: true

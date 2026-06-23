@@ -1,0 +1,99 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      prerelease:
+        description: "Mark the GitHub release as prerelease"
+        required: true
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  macos:
+    runs-on: macos-15
+    env:
+      APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+      APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+      APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+      APPLE_ID: ${{ secrets.APPLE_ID }}
+      APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
+      APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.13.0"
+
+      - name: Enable pnpm
+        run: corepack enable
+
+      - name: Install Rust stable
+        run: rustup toolchain install stable --profile minimal
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify web app
+        run: |
+          pnpm run format:check
+          pnpm run lint
+          pnpm run typecheck
+          pnpm run test
+          pnpm run build
+          pnpm exec playwright install chromium
+          pnpm run test:e2e
+
+      - name: Verify Tauri backend
+        run: |
+          cargo fmt --check --manifest-path src-tauri/Cargo.toml
+          cargo test --manifest-path src-tauri/Cargo.toml
+          cargo check --manifest-path src-tauri/Cargo.toml
+
+      - name: Build Tauri release bundle
+        run: pnpm run tauri:build
+
+      - name: Collect release assets
+        run: |
+          mkdir -p release-assets
+          find src-tauri/target/release/bundle -type f \( -name '*.dmg' -o -name '*.tar.gz' -o -name '*.zip' \) -exec cp {} release-assets/ \;
+          while IFS= read -r app_bundle; do
+            name="$(basename "$app_bundle" .app)"
+            ditto -c -k --sequesterRsrc --keepParent "$app_bundle" "release-assets/${name}.app.zip"
+          done < <(find src-tauri/target/release/bundle -type d -name '*.app')
+          test "$(find release-assets -type f | wc -l | tr -d ' ')" != "0"
+
+      - name: Upload release bundle artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: openmindsteed-macos-${{ github.ref_name || github.run_number }}
+          path: release-assets/*
+          if-no-files-found: error
+
+      - name: Publish GitHub release for tag
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PRERELEASE: ${{ inputs.prerelease || 'false' }}
+        run: |
+          prerelease_flag=""
+          if [ "$PRERELEASE" = "true" ]; then
+            prerelease_flag="--prerelease"
+          fi
+          gh release create "$GITHUB_REF_NAME" \
+            release-assets/* \
+            --title "OpenMindSteed $GITHUB_REF_NAME" \
+            --notes "Automated OpenMindSteed desktop release." \
+            $prerelease_flag

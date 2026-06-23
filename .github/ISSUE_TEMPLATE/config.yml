@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security-sensitive report
+    url: https://github.com/teancumtian/OpenMindSteed/security/advisories/new
+    about: Report credential leaks, auth bypasses, or other security-sensitive problems privately.
+  - name: Implementation plan
+    url: https://github.com/teancumtian/OpenMindSteed/blob/main/docs/OPENMINDSTEED_PLAN.md
+    about: Read the current implementation plan before proposing large changes.

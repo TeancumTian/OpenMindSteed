@@ -1,0 +1,24 @@
+.DS_Store
+node_modules/
+dist/
+dist-ssr/
+coverage/
+.vite/
+playwright-report/
+test-results/
+.idea/
+.vscode/
+*.log
+*.local
+*.timestamp-*.mjs
+
+# Tauri and Rust
+src-tauri/target/
+src-tauri/gen/
+src-tauri/protocol/codex-generated/
+
+# Local app data
+var/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
