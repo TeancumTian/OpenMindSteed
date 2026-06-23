@@ -6,6 +6,7 @@ import {
   codexStatusNoticeFromMetadata,
   codexThreadNoticeFromMetadata,
   deleteNodeConfirmationMessage,
+  errorMessage,
   formatCodexStatusDisplay,
   parseGeneratedImageMessage,
   searchKnowledgeNodes,
@@ -99,6 +100,18 @@ describe("deleteNodeConfirmationMessage", () => {
 
   it("returns null for an unknown node", () => {
     expect(deleteNodeConfirmationMessage(nodes, "missing")).toBeNull();
+  });
+});
+
+describe("errorMessage", () => {
+  it("preserves Tauri string rejections", () => {
+    expect(errorMessage("Codex app-server error", "fallback")).toBe("Codex app-server error");
+  });
+
+  it("uses Error messages and falls back for empty unknown values", () => {
+    expect(errorMessage(new Error("Provider failed"), "fallback")).toBe("Provider failed");
+    expect(errorMessage("", "fallback")).toBe("fallback");
+    expect(errorMessage(null, "fallback")).toBe("fallback");
   });
 });
 

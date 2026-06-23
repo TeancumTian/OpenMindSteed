@@ -273,21 +273,7 @@ fn codex_local_turn_impl(
     rpc.send_request(
         3,
         "turn/start",
-        serde_json::json!({
-            "threadId": &thread.thread_id,
-            "input": [
-                {
-                    "type": "text",
-                    "text": prompt,
-                    "text_elements": []
-                }
-            ],
-            "cwd": cwd.to_string_lossy(),
-            "approvalPolicy": "never",
-            "sandboxPolicy": {
-                "mode": "read-only"
-            }
-        }),
+        codex_turn_start_params(&thread.thread_id, &cwd, &prompt),
     )?;
     let raw_answer =
         rpc.collect_turn_answer(&app, &payload.request_id, Duration::from_secs(120))?;
@@ -302,6 +288,25 @@ fn codex_local_turn_impl(
         codex_thread_status: thread.status,
         codex_thread_resume_error: thread.resume_error,
         suggestions: extraction.suggestions,
+    })
+}
+
+fn codex_turn_start_params(thread_id: &str, cwd: &Path, prompt: &str) -> serde_json::Value {
+    serde_json::json!({
+        "threadId": thread_id,
+        "input": [
+            {
+                "type": "text",
+                "text": prompt,
+                "text_elements": []
+            }
+        ],
+        "cwd": cwd.to_string_lossy(),
+        "approvalPolicy": "never",
+        "sandboxPolicy": {
+            "type": "readOnly",
+            "networkAccess": false
+        }
     })
 }
 
@@ -2226,6 +2231,18 @@ mod tests {
         );
         clear_codex_cancel(&request_id);
         assert!(!is_codex_cancelled(&request_id));
+    }
+
+    #[test]
+    fn codex_turn_start_params_use_current_read_only_sandbox_schema() {
+        let params = codex_turn_start_params("thread-1", Path::new("/tmp/openmindsteed"), "你好");
+
+        assert_eq!(params["threadId"], "thread-1");
+        assert_eq!(params["input"][0]["type"], "text");
+        assert_eq!(params["input"][0]["text"], "你好");
+        assert_eq!(params["sandboxPolicy"]["type"], "readOnly");
+        assert_eq!(params["sandboxPolicy"]["networkAccess"], false);
+        assert!(params["sandboxPolicy"].get("mode").is_none());
     }
 
     #[test]

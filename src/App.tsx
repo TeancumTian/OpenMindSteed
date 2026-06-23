@@ -284,7 +284,7 @@ export function App() {
         controller.signal,
       );
     } catch (error) {
-      const message = error instanceof Error ? error.message : "AI provider failed";
+      const message = errorMessage(error, "AI provider failed");
       if (controller.signal.aborted) {
         dispatch({
           type: "update-message",
@@ -1464,6 +1464,21 @@ export function deleteNodeConfirmationMessage(
   const scope =
     descendantCount > 0 ? `“${target.title}”和 ${descendantCount} 个子节点` : `“${target.title}”`;
   return `删除${scope}？这只会删除 OpenMindSteed 中的节点；下次同步到 Obsidian 时，对应的托管文件会移动到 _Deleted。`;
+}
+
+export function errorMessage(error: unknown, fallback: string): string {
+  if (error instanceof Error && error.message.trim()) return error.message;
+  if (typeof error === "string" && error.trim()) return error;
+  if (
+    error &&
+    typeof error === "object" &&
+    "message" in error &&
+    typeof error.message === "string" &&
+    error.message.trim()
+  ) {
+    return error.message;
+  }
+  return fallback;
 }
 
 export function autoPromptForNode(node: KnowledgeNode) {
